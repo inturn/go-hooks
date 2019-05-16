@@ -1,0 +1,10 @@
+{
+  "version" : "1.0",
+  "vet": "vet",
+
+
+  "golangci" : {
+    "repo" : "github.com/golangci/golangci-lint"
+  }
+
+}
