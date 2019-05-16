@@ -7,10 +7,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"time"
 )
 
-const hookPath = ".git/hooks/"
+
 
 func main() {
 	fs := flag.NewFlagSet("go-hooks", flag.ExitOnError)
@@ -22,30 +23,47 @@ func main() {
 
 	_ = online
 
-	getLatestPush(*url)
+	getLatestPreCommit(*url)
+	execute()
 }
 
-func getLatestPush(url string) {
+func execute() {
 
-	resp := sendRequest(url)
+}
 
-	raw, err := ioutil.ReadAll(resp.Body)
+func getLatestPreCommit(url string) {
+
+	resp, err := sendRequest(url)
+
+	rawBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
+	// do not forget to close body
+	defer resp.Body.Close()
 
-	fmt.Print(os.TempDir())
+	// if file does not exist we skip the step with comparing the hashes and save file directly
+	if _, err := os.Stat(hookPath + hookName); os.IsNotExist(err) {
+		file, err := os.Create(hookPath + hookName)
+		if err != nil {
+			panic(err)
+		}
+		_, err = file.Write(rawBody)
+		if err != nil {
+			panic(err)
+		}
 
-	file, err := os.Create(hookPath + "commit")
+		file.Close()
 
-	if err != nil {
-		panic(err)
+		cmd := exec.Command("chmod", "a+x", hookPath+hookName)
+		out, err := cmd.Output()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Print(string(out))
 	}
-	_, err = file.Write(raw)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+
+	//fmt.Print(os.TempDir())
 
 	//cmd := exec.Command("pwd")
 	//data, err := cmd.Output()
@@ -73,7 +91,15 @@ func sendRequest(url string) (*http.Response, error) {
 	return resp, nil
 }
 
-func compareHashes() {
-	h := md5.New()
+func compareHashes(rawBody []byte) bool {
+	fileHash := md5.Sum([]byte("fsfsfdfdfd"))
+	bodyHash := md5.Sum(rawBody)
 
+	// in go we can compare two arrays of the same type
+	// [16]byte is the md5 hash
+	if (fileHash != bodyHash) {
+		return false
+	}
+
+	return true
 }
