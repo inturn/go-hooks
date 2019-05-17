@@ -110,7 +110,7 @@ func writeHookFromBody(rawBody []byte) {
 	// go build -o
 	// build the downloaded go file
 	buildCmd := exec.Command("go", "build", hookPath+preCommitName+goFileExt)
-	_, err = buildCmd.Output()
+	err = buildCmd.Start()
 	if err != nil {
 		panic(err)
 	}
@@ -118,7 +118,7 @@ func writeHookFromBody(rawBody []byte) {
 
 	// move file from current directory to the hook path
 	moveCmd := exec.Command("mv", preCommitName, hookPath)
-	_, err = moveCmd.Output()
+	err = moveCmd.Start()
 	if err != nil {
 		panic(err)
 	}
@@ -131,7 +131,7 @@ func writeHookFromBody(rawBody []byte) {
 
 	// make the file executable (needed according git instructions)
 	cmd := exec.Command("chmod", "a+x", hookPath+preCommitName)
-	_, err = cmd.Output()
+	err = cmd.Start()
 	if err != nil {
 		panic(err)
 	}
