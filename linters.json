@@ -1,10 +1,40 @@
 {
-  "version" : "1.0",
-  "vet": "vet",
-
-
-  "golangci" : {
-    "repo" : "github.com/golangci/golangci-lint"
+  "config_version": "1.0",
+  "linters": {
+    "vet": {
+      "repo": null,
+      "entry": "go vet",
+      "description": "https://golang.org/cmd/vet/"
+    },
+    "go-build": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    },
+    "go-test": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    },
+    "go-errcheck": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    },
+    "go-goimports": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    },
+    "dockercheck": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    },
+    "composecheck": {
+      "repo": null,
+      "entry": "",
+      "description": ""
+    }
   }
-
 }
