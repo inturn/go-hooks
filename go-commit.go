@@ -35,30 +35,30 @@ func main() {
 	fs.String("install", "install", "install pre-commit and pre-push into .git/bootstrap")
 
 	// [TEMP]
-	url := fs.String("url",
+	preCommitUrl := fs.String("url",
 		"https://raw.githubusercontent.com/inturn/go-bootstrap/BE-1904_git-hook_solution_for_golang_microservices/pre-commit.go",
 		"url of the commit operating file")
 
 	// [TEMP]
-	url2 := fs.String("url2",
+	prePushUrl := fs.String("url2",
 		"https://raw.githubusercontent.com/inturn/go-bootstrap/BE-1904_git-hook_solution_for_golang_microservices/pre-push.go",
 		"url of the push operating file")
 
 
-	_ = fs.Bool("run-all-files", true, "run linters on all files in repo")
+	runAll := fs.Bool("run-all-files", true, "run linters on all files in repo")
 
-	//return
-	//
-	//if *runAll {
-	//
-	//}
+	if *runAll {
+		executeRunAll()
+		return
+	}
 
-	installPreCommit(*url)
-	installPrePush()
-	execute()
+	installPreCommit(*preCommitUrl)
+	installPrePush(*prePushUrl)
+
 }
 
-func execute() {
+// cmd to run-all with pre-commit and then with pre-push
+func executeRunAll() {
 
 }
 
